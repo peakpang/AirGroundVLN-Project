@@ -119,24 +119,53 @@ function setupVideoCarouselAutoplay() {
     });
 }
 
-$(document).ready(function() {
-    // Check for click events on the navbar burger icon
+function setupTrajectoryCarousel() {
+    const trajectoryCarousel = document.querySelector('[data-trajectory-carousel]');
+    if (!trajectoryCarousel) return;
 
-    var options = {
-		slidesToScroll: 1,
-		slidesToShow: 1,
-		loop: true,
-		infinite: true,
-		autoplay: true,
-		autoplaySpeed: 5000,
+    const slides = Array.from(trajectoryCarousel.querySelectorAll('.trajectory-slide'));
+    const dots = Array.from(trajectoryCarousel.querySelectorAll('[data-trajectory-dot]'));
+    const previousButton = trajectoryCarousel.querySelector('[data-trajectory-prev]');
+    const nextButton = trajectoryCarousel.querySelector('[data-trajectory-next]');
+    let currentSlide = 0;
+    let autoplayTimer;
+
+    function showTrajectory(index) {
+        currentSlide = (index + slides.length) % slides.length;
+        slides.forEach((slide, slideIndex) => {
+            slide.classList.toggle('is-active', slideIndex === currentSlide);
+        });
+        dots.forEach((dot, dotIndex) => {
+            dot.classList.toggle('is-active', dotIndex === currentSlide);
+            dot.setAttribute('aria-current', dotIndex === currentSlide ? 'true' : 'false');
+        });
     }
 
-	// Initialize all div with carousel class
-    var carousels = bulmaCarousel.attach('.carousel', options);
-	
-    bulmaSlider.attach();
-    
-    // Setup video autoplay for carousel
-    setupVideoCarouselAutoplay();
+    function restartAutoplay() {
+        window.clearInterval(autoplayTimer);
+        autoplayTimer = window.setInterval(() => showTrajectory(currentSlide + 1), 7000);
+    }
 
-})
+    previousButton.addEventListener('click', () => {
+        showTrajectory(currentSlide - 1);
+        restartAutoplay();
+    });
+    nextButton.addEventListener('click', () => {
+        showTrajectory(currentSlide + 1);
+        restartAutoplay();
+    });
+    dots.forEach((dot, dotIndex) => dot.addEventListener('click', () => {
+        showTrajectory(dotIndex);
+        restartAutoplay();
+    }));
+    trajectoryCarousel.addEventListener('mouseenter', () => window.clearInterval(autoplayTimer));
+    trajectoryCarousel.addEventListener('mouseleave', restartAutoplay);
+    showTrajectory(0);
+    restartAutoplay();
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupTrajectoryCarousel);
+} else {
+    setupTrajectoryCarousel();
+}
