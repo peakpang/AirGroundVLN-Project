@@ -1461,6 +1461,29 @@ body {
   width: 100%;
 }
 
+.demo-video-fallback {
+  display: flex;
+  justify-content: center;
+  padding: 0.9rem 0 0.15rem;
+}
+
+.demo-video-fallback .button {
+  background: rgb(255 255 255 / 0.66);
+  border: 1px solid rgb(255 255 255 / 0.82);
+  box-shadow: 0 8px 22px rgb(34 87 111 / 0.1);
+  color: #17677c;
+  font-weight: 700;
+  transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease;
+}
+
+.demo-video-fallback .button:hover {
+  background: rgb(255 255 255 / 0.9);
+  box-shadow: 0 12px 28px rgb(34 87 111 / 0.16);
+  transform: translateY(-2px);
+}
+
+.demo-video-fallback .icon { color: #e55361; }
+
 .demo-placeholder {
   color: #1a475d;
   min-height: 280px;
